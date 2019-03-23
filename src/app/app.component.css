@@ -5,3 +5,7 @@
 nav{
   /*background-color: black;*/
 }
+
+.img-fluid {
+  max-width: 50%;
+}
