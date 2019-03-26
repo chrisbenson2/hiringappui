@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {State} from '../state';
+import * as jspdf from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-user-form',
@@ -10,6 +12,7 @@ export class UserFormComponent implements OnInit {
 
  // public objArray: [];
    public usStates: State[] = [];
+   public pdf: jspdf;
 
   constructor() { }
 
@@ -75,7 +78,46 @@ export class UserFormComponent implements OnInit {
       { name: 'WISCONSIN', abbreviation: 'WI'},
       { name: 'WYOMING', abbreviation: 'WY' }
     ];
+  }
 
+  public captureScreen() {
+    const data = document.getElementById('contentToConvert');
+    html2canvas(data).then(canvas => {
+      // Few necessary setting options
+      const imgWidth = 208;
+      const pageHeight = 295;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      const heightLeft = imgHeight;
 
+      const contentDataURL = canvas.toDataURL('image/png')
+      this.pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF
+      const position = 0;
+      this.pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)
+      // this.pdf.save('MYPdf.pdf'); // Generated PDF
+    });
+
+    // var email = ('./path/to/emailjs/email');
+    // const server 	= email.server.connect({
+    //   user:	'username',
+    //   password: 'password',
+    //   host:	'smtp.your-email.com',
+    //   ssl:		true
+    // });
+    //
+    // const message	= {
+    //   text:	"i hope this works",
+    //   from:	"you <username@your-email.com>",
+    //   to:		"someone <someone@c405.cb@gmail.com>",
+    //   cc:		"else <else@your-email.com>",
+    //   subject:	"testing emailjs",
+    //   attachment:
+    //     [
+    //       this.pdf
+    //       // {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
+    //       // {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
+    //     ]
+    // };
+
+    // server.send(message, function(err, message) { console.log(err || message); });
   }
 }
